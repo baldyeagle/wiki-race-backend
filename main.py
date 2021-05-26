@@ -50,3 +50,23 @@ fake_lobbies = [
 @app.get('/')
 def read_hello_world():
     return {'Hello': 'World'}
+
+
+@app.get('/lobbies')
+def read_lobbies():
+    return fake_lobbies
+
+
+@app.get('/lobbies/{lobby_id}')
+def read_lobby(lobby_id: UUID):
+    return fake_lobbies
+
+
+@app.post('/lobbies', response_model=GameLobby)
+def create_lobby(lobby: GameLobby):
+    if lobby.pages is None:
+        lobby.pages = {
+            lobby.start_page.title: lobby.start_page,
+            lobby.end_page.title: lobby.end_page,
+        }
+    return lobby
